@@ -6,10 +6,9 @@
 #include <iostream>
 #include "Enemy.h"
 
-Enemy::Enemy(sf::Vector2f position) : ColliderObject(position, 2.0f) {
+Enemy::Enemy(sf::Vector2f position) : ColliderObject(position, 2.0f, &alive, "Foe") {
     shape.setFillColor(sf::Color::White);
     shape.setPosition(position);
-
 }
 
 void Enemy::draw(sf::RenderWindow &window) {
@@ -24,5 +23,10 @@ void Enemy::headTowards(float dt, sf::Vector2f targetPosition) {
 
 void Enemy::onCollision(ColliderObject &object) {
     // std::cout << "Ennemy Died" << std::endl;
-    alive = false;
+    if(object.getTag() == "Player")
+        alive = false;
+}
+
+bool Enemy::isAlive() const {
+    return alive;
 }

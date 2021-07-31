@@ -16,6 +16,14 @@ const sf::Vector2f &ColliderObject::getPosition() const {
     return position;
 }
 
+std::string ColliderObject::getTag() const{
+    return tag;
+}
+
+bool ColliderObject::isEnabled() {
+    return *enabled_ptr;
+}
+
 
 
 

@@ -25,12 +25,16 @@ public:
 
     void onCollision(ColliderObject &object) override;
 
+    float* getMaxHealth();
+
+    float* getCurrentHealth();
+
 private:
     const float velocity = 200;
     sf::CircleShape shape{radius};
-
-    int maxHealth = 100;
-    int currentHealth = 100;
+    float maxHealth = 500;
+    float currentHealth = maxHealth;
+    bool alive = true;
 
 };
 
