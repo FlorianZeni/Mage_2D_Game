@@ -49,6 +49,11 @@ void GameScene::updateLogic(float deltaTime) {
 
     detectCollisions();
 
+    counter ++;
+    if (counter == 1000){
+        cleanContainers();
+        counter = 0;
+    }
 }
 
 void GameScene::updateGraphics(float deltaTime, sf::RenderWindow &window) {
@@ -81,6 +86,21 @@ void GameScene::detectCollisions() {
             }
         }
     }
+}
+
+void GameScene::cleanContainers() {
+
+    objects.erase(std::remove_if(objects.begin(), objects.end(), [](GameObject* ptr){return ptr->toBeRemoved();}), objects.end());
+    colliders.erase(std::remove_if(colliders.begin(), colliders.end(),  [](ColliderObject* ptr){return ptr->toBeRemoved();}), colliders.end());
+    enemy_ptrs.erase(std::remove_if(enemy_ptrs.begin(), enemy_ptrs.end(),  [](Enemy* ptr){return ptr->toBeRemoved();}), enemy_ptrs.end());
+
+    for(auto & enemy_ptr : enemy_ptrs){
+        if(!enemy_ptr->isAlive()){
+            delete enemy_ptr;
+        }
+    }
+
+    std::cout << objects.size() << "  " << colliders.size() << " " << enemy_ptrs.size() << std::endl;
 }
 
 

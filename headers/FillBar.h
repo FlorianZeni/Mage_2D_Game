@@ -17,6 +17,8 @@ public:
 
     void draw(sf::RenderWindow &window) override;
 
+     bool toBeRemoved() override;
+
     void updateBar();
 
 protected:

@@ -22,5 +22,9 @@ void FillBar::draw(sf::RenderWindow &window) {
 
 void FillBar::updateBar() {
     frontShape.setScale(*currentValue / *maxValue, 1);
-    std::cout << *currentValue / *maxValue << std::endl;
+    // std::cout << *currentValue / *maxValue << std::endl;
+}
+
+bool FillBar::toBeRemoved() {
+    return false;
 }

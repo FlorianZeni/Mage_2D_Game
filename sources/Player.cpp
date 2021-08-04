@@ -8,7 +8,7 @@ Player::Player() : Player({500, 300}) {
 
 }
 
-Player::Player(sf::Vector2f position) : ColliderObject(position, 15.0f, &alive, "Player") {
+Player::Player(sf::Vector2f position) : ColliderObject(position, 5.0f, &alive, "Player") {
     shape.setFillColor(sf::Color::Green);
 }
 
@@ -32,5 +32,9 @@ float* Player::getMaxHealth() {
 
 float* Player::getCurrentHealth(){
     return &currentHealth;
+}
+
+bool Player::toBeRemoved() {
+    return currentHealth == 0;
 }
 

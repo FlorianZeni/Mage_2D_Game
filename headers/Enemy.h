@@ -22,10 +22,12 @@ public:
 
     void headTowards(float dt, sf::Vector2f targetPosition);
 
+    bool toBeRemoved() override;
+
     void onCollision(ColliderObject &object) override;
 
 private:
-    const float velocity = 25;
+    const float velocity = 75;
     sf::CircleShape shape{radius};
     bool alive = true;
 };

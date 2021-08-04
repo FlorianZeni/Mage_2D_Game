@@ -10,7 +10,8 @@
 class GameObject {
 
 public:
-    virtual void draw(sf::RenderWindow &window) {};
+    virtual void draw(sf::RenderWindow &window) = 0;
+    virtual bool toBeRemoved() = 0;
 };
 
 #endif //MAGE2_GAMEOBJECT_H

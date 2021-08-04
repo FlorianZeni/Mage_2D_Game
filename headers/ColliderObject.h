@@ -29,6 +29,8 @@ public:
 
     [[nodiscard]] const sf::Vector2f& getPosition() const;
 
+    bool toBeRemoved() override;
+
     virtual void onCollision(ColliderObject &object) = 0;
 
 protected:

@@ -24,6 +24,10 @@ bool ColliderObject::isEnabled() {
     return *enabled_ptr;
 }
 
+bool ColliderObject::toBeRemoved() {
+    return !isEnabled();
+}
+
 
 
 

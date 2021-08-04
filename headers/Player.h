@@ -23,6 +23,8 @@ public:
 
     void updatePosition(float dt, sf::Vector2f direction);
 
+    bool toBeRemoved() override;
+
     void onCollision(ColliderObject &object) override;
 
     float* getMaxHealth();
