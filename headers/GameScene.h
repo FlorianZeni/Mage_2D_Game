@@ -33,7 +33,9 @@ private:
     sf::Vector2f direction;
     std::vector<Enemy *> enemy_ptrs;
     FillBar healthBar {{20, 20}, {50, 20}, player.getMaxHealth(), player.getCurrentHealth()};
-    int counter = 0;
+    float timeSinceLastCleanup = 0;
+    const float timeBetweenCleanups = 2;
+    int aliveEnemiesAmount = 0;
     void cleanContainers();
 };
 

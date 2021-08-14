@@ -40,19 +40,19 @@ void GameScene::updateInputs(float deltaTime) {
 
 void GameScene::updateLogic(float deltaTime) {
     player.updatePosition(deltaTime, direction);
+    spawnEnnemies(200);
     sf::Vector2f playerPosition = player.getPosition();
     for (Enemy *enemy_ptr : enemy_ptrs) {
         if(enemy_ptr->isAlive())
             enemy_ptr->headTowards(deltaTime, playerPosition);
     }
 
-
     detectCollisions();
 
-    counter ++;
-    if (counter == 1000){
+    timeSinceLastCleanup += deltaTime;
+    if (timeSinceLastCleanup >= timeBetweenCleanups){
         cleanContainers();
-        counter = 0;
+        timeSinceLastCleanup = 0;
     }
 }
 
@@ -63,13 +63,15 @@ void GameScene::updateGraphics(float deltaTime, sf::RenderWindow &window) {
 }
 
 void GameScene::spawnEnnemies(int amount) {
-    for (int i(0); i < amount; i++) {
+    for (int i(0); i < amount - aliveEnemiesAmount; i++) {
         sf::Vector2f pos = sf::Vector2f{(float) (std::rand() % 1000), (float) (std::rand() % 500)};
         //std::cout << pos.x << " " << pos.y << std::endl;
-        enemy_ptrs.push_back(new Enemy(pos));
-        addObject(enemy_ptrs[i]);
-        addCollider(enemy_ptrs[i]);
+        auto *new_enemy = new Enemy(pos);
+        enemy_ptrs.push_back(new_enemy);
+        addObject(new_enemy);
+        addCollider(new_enemy);
     }
+    aliveEnemiesAmount = amount;
 }
 
 void GameScene::detectCollisions() {
@@ -92,12 +94,18 @@ void GameScene::cleanContainers() {
 
     objects.erase(std::remove_if(objects.begin(), objects.end(), [](GameObject* ptr){return ptr->toBeRemoved();}), objects.end());
     colliders.erase(std::remove_if(colliders.begin(), colliders.end(),  [](ColliderObject* ptr){return ptr->toBeRemoved();}), colliders.end());
-    enemy_ptrs.erase(std::remove_if(enemy_ptrs.begin(), enemy_ptrs.end(),  [](Enemy* ptr){return ptr->toBeRemoved();}), enemy_ptrs.end());
 
+    std::vector<Enemy *> to_be_deleted;
     for(auto & enemy_ptr : enemy_ptrs){
-        if(!enemy_ptr->isAlive()){
-            delete enemy_ptr;
+        if(enemy_ptr->toBeRemoved()) {
+            to_be_deleted.push_back(enemy_ptr);
+            aliveEnemiesAmount--;
         }
+    }
+
+    enemy_ptrs.erase(std::remove_if(enemy_ptrs.begin(), enemy_ptrs.end(),  [](Enemy* ptr){return ptr->toBeRemoved();}), enemy_ptrs.end());
+    for(auto b : to_be_deleted){
+        delete b;
     }
 
     std::cout << objects.size() << "  " << colliders.size() << " " << enemy_ptrs.size() << std::endl;
