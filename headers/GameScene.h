@@ -24,9 +24,9 @@ public:
 
     void updateGraphics(float deltaTime, sf::RenderWindow &window) override;
 
-    void detectCollisions() override;
+    void detectCollisions() const override;
 
-    void spawnEnnemies(int amount = 0);
+    void spawnEnemies(int amount = 0);
 
 private:
     Player player;
@@ -34,9 +34,12 @@ private:
     std::vector<Enemy *> enemy_ptrs;
     FillBar healthBar {{20, 20}, {50, 20}, player.getMaxHealth(), player.getCurrentHealth()};
     float timeSinceLastCleanup = 0;
-    const float timeBetweenCleanups = 2;
+    float totalPlayTime = 0;
+    const float timeBetweenCleanups = 2; // in seconds
     int aliveEnemiesAmount = 0;
     void cleanContainers();
+
+    void updateLivingEnemies();
 };
 
 

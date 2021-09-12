@@ -7,6 +7,7 @@
 
 #include "GameObject.h"
 #include "Utils.h"
+#include "Constants.h"
 #include <cstring>
 #include <utility>
 
@@ -14,16 +15,16 @@ class ColliderObject : public GameObject {
 public:
     virtual ~ColliderObject() = default;
 
-    ColliderObject(sf::Vector2f position, bool* enabled_ptr, float radius) : ColliderObject(position, radius, enabled_ptr, "default") {};
+    ColliderObject(sf::Vector2f position, bool* enabled_ptr, float radius) : ColliderObject(position, radius, enabled_ptr, Constants::defaultTag) {};
 
-    ColliderObject(sf::Vector2f position, float radius, bool* enabled_ptr, std::string tag) :
+    ColliderObject(sf::Vector2f position, float radius, bool* enabled_ptr, int tag) :
         GameObject(), position(position), radius(radius), enabled_ptr(enabled_ptr), tag(tag) {};
 
     bool collides(ColliderObject &object);
 
     bool isEnabled();
 
-    [[nodiscard]] std::string getTag() const;
+    [[nodiscard]] int getTag() const;
 
     [[nodiscard]] const float& getRadius() const;
 
@@ -37,7 +38,7 @@ protected:
     sf::Vector2f position;
     float radius;
     bool* enabled_ptr;
-    std::string tag;
+    int tag;
 
 };
 

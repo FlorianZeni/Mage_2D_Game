@@ -27,7 +27,7 @@ protected:
     }
 
     // Detects and calls onCollision methods
-    virtual void detectCollisions() = 0;
+    virtual void detectCollisions() const = 0;
 
     // Updates Player Inputs
     virtual void updateInputs(float deltaTime) = 0;

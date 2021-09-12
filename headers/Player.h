@@ -34,7 +34,7 @@ public:
 private:
     const float velocity = 200;
     sf::CircleShape shape{radius};
-    float maxHealth = 500;
+    float maxHealth = 10000;
     float currentHealth = maxHealth;
     bool alive = true;
 

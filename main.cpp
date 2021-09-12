@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include <Player.h>
+#include "Player.h"
+#include "Constants.h"
 #include <iostream>
 #include "GameScene.h"
 
@@ -7,7 +8,7 @@ int main() {
 
     sf::ContextSettings settings(0, 0, 4);
 
-    sf::RenderWindow window(sf::VideoMode(1000, 600), "SFML works!", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode(Constants::gameWidth, Constants::gameHeight), "SFML works!", sf::Style::Default, settings);
 
     GameScene gameScene(&window);
 

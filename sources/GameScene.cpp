@@ -3,6 +3,7 @@
 //
 
 #include "GameScene.h"
+#include "Constants.h"
 #include <SFML/Window/Event.hpp>
 #include <cmath>
 #include <random>
@@ -12,7 +13,7 @@
 GameScene::GameScene(sf::RenderWindow *window_ptr) : Scene(window_ptr) {
     addObject(&player);
     addCollider(&player);
-    spawnEnnemies(200);
+    spawnEnemies(200);
     addObject(&healthBar);
 }
 
@@ -40,7 +41,10 @@ void GameScene::updateInputs(float deltaTime) {
 
 void GameScene::updateLogic(float deltaTime) {
     player.updatePosition(deltaTime, direction);
-    spawnEnnemies(200);
+    totalPlayTime += deltaTime;
+    int enemyAmount = (int) (200 + 10 * totalPlayTime);
+    enemyAmount = std::max(enemyAmount, 600);
+    spawnEnemies(enemyAmount);
     sf::Vector2f playerPosition = player.getPosition();
     for (Enemy *enemy_ptr : enemy_ptrs) {
         if(enemy_ptr->isAlive())
@@ -48,6 +52,7 @@ void GameScene::updateLogic(float deltaTime) {
     }
 
     detectCollisions();
+    updateLivingEnemies();
 
     timeSinceLastCleanup += deltaTime;
     if (timeSinceLastCleanup >= timeBetweenCleanups){
@@ -62,11 +67,23 @@ void GameScene::updateGraphics(float deltaTime, sf::RenderWindow &window) {
     }
 }
 
-void GameScene::spawnEnnemies(int amount) {
+void GameScene::spawnEnemies(int amount) {
+    int xPos;
+    int yPos;
     for (int i(0); i < amount - aliveEnemiesAmount; i++) {
-        sf::Vector2f pos = sf::Vector2f{(float) (std::rand() % 1000), (float) (std::rand() % 500)};
+        if(std::rand() % 2 == 0){
+            xPos = std::rand() % Constants::gameWidth;
+            yPos = std::rand() % 600 - 300;
+            yPos = yPos < 0 ? yPos : yPos + Constants::gameHeight;
+        }
+        else{
+            yPos = std::rand() % Constants::gameHeight;
+            xPos = std::rand() % 600 - 300;
+            xPos = xPos < 0 ? xPos : xPos + Constants::gameWidth;
+        }
+        sf::Vector2f pos = sf::Vector2f{(float) (xPos), (float) (yPos)};
         //std::cout << pos.x << " " << pos.y << std::endl;
-        auto *new_enemy = new Enemy(pos);
+        auto *new_enemy = new Enemy(pos, 10.0f);
         enemy_ptrs.push_back(new_enemy);
         addObject(new_enemy);
         addCollider(new_enemy);
@@ -74,18 +91,29 @@ void GameScene::spawnEnnemies(int amount) {
     aliveEnemiesAmount = amount;
 }
 
-void GameScene::detectCollisions() {
+void GameScene::detectCollisions() const{
     for (int i = 0; i < colliders.size(); i++) {
         for (int j = i + 1; j < colliders.size(); j++) {
-            if (colliders[i]->isEnabled() && colliders[j]->isEnabled()){
+            auto first = colliders[i];
+            auto second = colliders[j];
+            if (first->isEnabled() && second->isEnabled()){
                 // std::cout << "Distance " << Utils::Distance(colliders[i]->position, colliders[j]->position) << std::endl;
                 // std::cout << "Rayons " << colliders[i]->radius + colliders[j]->radius << std::endl;
-                if (colliders[i]->collides(*colliders[j])) {
-                    //if(Utils::Distance(colliders[i]->position, colliders[j]->position) < colliders[i]->radius + colliders[j]->radius){
-                    colliders[i]->onCollision(*colliders[j]);
-                    colliders[j]->onCollision(*colliders[i]);
+                //if (Constants::mayCollide(first->getTag(), second->getTag())) { // More costly than computing the distance
+                if (first->collides(*second)) {
+                    first->onCollision(*second);
+                    second->onCollision(*first);
                 }
             }
+        }
+    }
+}
+
+void GameScene::updateLivingEnemies(){
+    aliveEnemiesAmount = 0;
+    for(auto & enemy_ptr : enemy_ptrs){
+        if(enemy_ptr->isAlive()){
+            aliveEnemiesAmount ++;
         }
     }
 }
@@ -99,7 +127,6 @@ void GameScene::cleanContainers() {
     for(auto & enemy_ptr : enemy_ptrs){
         if(enemy_ptr->toBeRemoved()) {
             to_be_deleted.push_back(enemy_ptr);
-            aliveEnemiesAmount--;
         }
     }
 

@@ -16,6 +16,8 @@ class Enemy : public ColliderObject {
 public:
     Enemy(sf::Vector2f position);
 
+    Enemy(sf::Vector2f position, float radius);
+
     bool isAlive() const;
 
     void draw(sf::RenderWindow &window) override;

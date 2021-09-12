@@ -8,7 +8,7 @@ Player::Player() : Player({500, 300}) {
 
 }
 
-Player::Player(sf::Vector2f position) : ColliderObject(position, 5.0f, &alive, "Player") {
+Player::Player(sf::Vector2f position) : ColliderObject(position, 5.0f, &alive, Constants::playerTag) {
     shape.setFillColor(sf::Color::Green);
 }
 
@@ -22,7 +22,7 @@ void Player::updatePosition(float dt, sf::Vector2f direction) {
 }
 
 void Player::onCollision(ColliderObject &object) {
-    if(object.getTag() == "Foe")
+    if(object.getTag() == Constants::foeTag)
         currentHealth = std::max(currentHealth - 1.f, 0.f);
 }
 

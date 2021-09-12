@@ -16,7 +16,7 @@ const sf::Vector2f &ColliderObject::getPosition() const {
     return position;
 }
 
-std::string ColliderObject::getTag() const{
+int ColliderObject::getTag() const{
     return tag;
 }
 

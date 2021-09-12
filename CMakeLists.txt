@@ -3,7 +3,7 @@ project(Mage)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Mage main.cpp sources/GameScene.cpp headers/GameScene.h headers/Scene.h headers/Player.h headers/GameObject.h sources/Player.cpp sources/Enemy.cpp headers/Enemy.h headers/Utils.h headers/ColliderObject.h sources/ColliderObject.cpp sources/FillBar.cpp headers/FillBar.h)
+add_executable(Mage main.cpp sources/GameScene.cpp headers/GameScene.h headers/Scene.h headers/Player.h headers/GameObject.h sources/Player.cpp sources/Enemy.cpp headers/Enemy.h headers/Utils.h headers/ColliderObject.h sources/ColliderObject.cpp sources/FillBar.cpp headers/FillBar.h headers/Constants.h)
 
 include_directories(headers /usr/include D:/SFML/include)
 set(SFML_ROOT D:/SFML)
